@@ -12,14 +12,15 @@ if(isset($_POST['signup-submit'])) {
 	$confPassword = $_POST['confPassword'];
 	$image = $_FILES['image'];
 
-	$filename = $fil['name'];
-	$filepath = $fil['tmp_name'];
-	$fileerror = $fil['error'];
-	print_r($image);
+	$filename = time() . '_' . $_FILES['image']['name'];
+	$filepath = $image['tmp_name'];
+	$fileerror = $image['error'];
 
-	return;
+
+	// print_r($filename); die; return ;
+
 	// all field
-	if(empty($name) || empty($email) || empty($sex) || empty($phone) || empty($password) || empty($confPassword)) {
+	if(empty($name) || empty($email) || empty($sex) || empty($phone) || empty($password) || empty($confPassword) || $image) {
 		header('Location: ../pages/register.php?error=emptyAllField&name='.$name.'&email='.$email.'&sex='.$sex.'&phone='.$phone.'&password='.$confPassword);
 		exit();
 	} 
@@ -71,21 +72,30 @@ if(isset($_POST['signup-submit'])) {
 				exit();
 			} else {
 
-				$sql = "INSERT INTO users (name, email, sex, phone, password) VALUES (?, ?, ?, ?, ?)";
-				$stmt = mysqli_stmt_init($conn);
-				
-				if(!mysqli_stmt_prepare($stmt, $sql)) {
-					header('Location: ../pages/register.php?error=sqlerror');
-					exit();
-				} else {
-					$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+				if($fileerror == 0) {
+					$destfile = 'upload/'.$filename;
 
-					echo ($hashedPassword);
-					mysqli_stmt_bind_param($stmt, "sssss", $name, $email, $sex, $phone, $hashedPassword);
-					mysqli_stmt_execute($stmt);
-					header('Location: ../pages/register.php?signup=success');
+					move_uploaded_file($_FILES['image']['tmp_name'], $destfile);
+
+					$sql = "INSERT INTO users (name, email, sex, phone, password, image) VALUES (?, ?, ?, ?, ?, ?)";
+					$stmt = mysqli_stmt_init($conn);
+					
+					if(!mysqli_stmt_prepare($stmt, $sql)) {
+						header('Location: ../pages/register.php?error=sqlerror');
+						exit();
+					} else {
+						$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+						mysqli_stmt_bind_param($stmt, "ssssss", $name, $email, $sex, $phone, $hashedPassword, $filename);
+						mysqli_stmt_execute($stmt);
+						header('Location: ../pages/register.php?signup=success');
+						exit();
+					}
+				} else {
+					header('Location: ../pages/register.php?error=imageUploadError&image='.$image);
 					exit();
 				}
+				
 			}
 		}
 	}

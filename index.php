@@ -15,6 +15,8 @@
                     <div class="col-md-12 pr-5 pl-5">
                         <?php
 
+
+
                             if(isset($_SESSION['userId'])) {
                                 echo '
                                     <p>You Logged In</p>
@@ -24,7 +26,20 @@
                                     </form>
                                     ';
                             } else {
-                                echo '<p>You Logged Out</p>';
+                                echo '<p>Dashboard</p>';
+                            }
+
+                            if(isset($_GET['error'])) {
+                                if($_GET['error'] == 'emptyfields') {
+                                    echo  '
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Enter email and password!
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    ';
+                                }
                             }
 
                         ?>
@@ -32,6 +47,8 @@
                 </div>
             </div>
         </div>
+
+        
             
             <?php 
                 if(!isset($_SESSION['userId'])) {
