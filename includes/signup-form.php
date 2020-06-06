@@ -66,8 +66,15 @@ if(isset($_POST['signup-submit'])) {
 	// Password
 	else if($_POST["password"] != $_POST["confPassword"]) {
 		header('Location: ../pages/register.php?error=passwordMatch&password'.$password);
-	} else if (! in_array($file_extension, $allowed_image_extension)) {
+	} 
+	
+	// Image
+	else if (! in_array($file_extension, $allowed_image_extension)) {
 		header('Location: ../pages/register.php?error=imageError&image'.$image);
+	} else if (($_FILES["image"]["size"] > 1000000)) {
+		header('Location: ../pages/register.php?error=imageSize&image'.$image);
+	} else if ($width > "1500" || $height > "1600") {
+		header('Location: ../pages/register.php?error=imageDimension&image'.$image);
 	} else {
 		
 		$sql = "SELECT email FROM users WHERE email = ?";
@@ -90,7 +97,8 @@ if(isset($_POST['signup-submit'])) {
 
 				if($fileerror == 0) {
 					
-					$destfile = 'upload/'.$filename;
+					// $destfile = 'upload/'.$filename;
+					$destfile = "upload/" . basename($_FILES["image"]["name"]);;
 
 					move_uploaded_file($_FILES['image']['tmp_name'], $destfile);
 

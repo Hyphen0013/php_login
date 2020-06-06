@@ -164,6 +164,16 @@
                                                     echo  'Upload valiid images. Only PNG and JPEG are allowed.';
                                                 }
                                             }
+                                            if(isset($_GET['error'])) {
+                                                if($_GET['error'] == 'imageSize') {
+                                                    echo  'Image size exceeds 2MB.';
+                                                }
+                                            }
+                                            if(isset($_GET['error'])) {
+                                                if($_GET['error'] == 'imageDimension') {
+                                                    echo  'Image dimension should be within 300X200.';
+                                                }
+                                            }
                                         ?>
                                     </span>
                                 </div>
