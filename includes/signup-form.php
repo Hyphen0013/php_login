@@ -10,7 +10,14 @@ if(isset($_POST['signup-submit'])) {
 	$phone = $_POST['phone'];
 	$password = $_POST['password'];
 	$confPassword = $_POST['confPassword'];
+	$image = $_FILES['image'];
 
+	$filename = $fil['name'];
+	$filepath = $fil['tmp_name'];
+	$fileerror = $fil['error'];
+	print_r($image);
+
+	return;
 	// all field
 	if(empty($name) || empty($email) || empty($sex) || empty($phone) || empty($password) || empty($confPassword)) {
 		header('Location: ../pages/register.php?error=emptyAllField&name='.$name.'&email='.$email.'&sex='.$sex.'&phone='.$phone.'&password='.$confPassword);
@@ -66,7 +73,7 @@ if(isset($_POST['signup-submit'])) {
 
 				$sql = "INSERT INTO users (name, email, sex, phone, password) VALUES (?, ?, ?, ?, ?)";
 				$stmt = mysqli_stmt_init($conn);
-
+				
 				if(!mysqli_stmt_prepare($stmt, $sql)) {
 					header('Location: ../pages/register.php?error=sqlerror');
 					exit();

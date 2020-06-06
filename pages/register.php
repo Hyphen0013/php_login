@@ -7,7 +7,7 @@
 
 	<div class="flex-center position-ref full-height">
     <div class="container">
-        <div class="row justify-content-center" style="margin-top: 20px;;">
+        <div class="row justify-content-center" style="margin-top: 20px;">
             <div class="col-md-8">
                 <div class="card">
 
