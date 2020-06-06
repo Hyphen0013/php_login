@@ -159,8 +159,10 @@
                                     <input type="file" class="form-control-file" id="image" name="image">
                                     <span style="color: red;">
                                         <?php
-                                            if(isset($error_msg['image'])) {
-                                                echo  $error_msg['image'];
+                                            if(isset($_GET['error'])) {
+                                                if($_GET['error'] == 'imageError') {
+                                                    echo  'Upload valiid images. Only PNG and JPEG are allowed.';
+                                                }
                                             }
                                         ?>
                                     </span>

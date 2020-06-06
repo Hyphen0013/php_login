@@ -16,11 +16,25 @@ if(isset($_POST['signup-submit'])) {
 	$filepath = $image['tmp_name'];
 	$fileerror = $image['error'];
 
-
-	// print_r($filename); die; return ;
+    // Get Image Dimension
+    $fileinfo = @getimagesize($_FILES["image"]["tmp_name"]);
+    $width = $fileinfo[0];
+    $height = $fileinfo[1];
+    
+    $allowed_image_extension = array(
+        "png",
+        "jpg",
+        "jpeg"
+	);
+	
+   
+    // Get image file extension
+    $file_extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+    
+	// print_r($file_extension); die; return ;
 
 	// all field
-	if(empty($name) || empty($email) || empty($sex) || empty($phone) || empty($password) || empty($confPassword) || $image) {
+	if(empty($name) || empty($email) || empty($sex) || empty($phone) || empty($password) || empty($confPassword) || empty($image)) {
 		header('Location: ../pages/register.php?error=emptyAllField&name='.$name.'&email='.$email.'&sex='.$sex.'&phone='.$phone.'&password='.$confPassword);
 		exit();
 	} 
@@ -52,6 +66,8 @@ if(isset($_POST['signup-submit'])) {
 	// Password
 	else if($_POST["password"] != $_POST["confPassword"]) {
 		header('Location: ../pages/register.php?error=passwordMatch&password'.$password);
+	} else if (! in_array($file_extension, $allowed_image_extension)) {
+		header('Location: ../pages/register.php?error=imageError&image'.$image);
 	} else {
 		
 		$sql = "SELECT email FROM users WHERE email = ?";
@@ -73,6 +89,7 @@ if(isset($_POST['signup-submit'])) {
 			} else {
 
 				if($fileerror == 0) {
+					
 					$destfile = 'upload/'.$filename;
 
 					move_uploaded_file($_FILES['image']['tmp_name'], $destfile);
